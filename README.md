@@ -1,5 +1,5 @@
 # AI-Water-Demand-Forecasting
-# Predictive Demand & Pumping Optimization
+## Predictive Demand & Pumping Optimization
 
 ## Project Overview
 This project addresses campus water shortages and high electricity costs by using **Agentic AI principles** and **XGBoost** to forecast daily water demand. It transforms raw IoT sensor data into an actionable dashboard for facility managers.
