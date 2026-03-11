@@ -1,6 +1,7 @@
-streamlit
+streamlit>=1.31.0
 pandas
 joblib
 scikit-learn
 xgboost
 numpy
+altair<5
