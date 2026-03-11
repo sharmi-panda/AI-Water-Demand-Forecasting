@@ -5,16 +5,20 @@ import datetime
 import os
 import numpy as np
 
-# 1. Get the directory where app.py is sitting (the 'notebooks' folder)
+# 1. Get the directory where app.py is sitting
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Go UP one level to the main project folder, then into 'processed_data'
-processed_path = os.path.join(BASE_DIR, "..", "processed_data")
+# 2. Try looking for 'processed_data' in the same folder (Cloud style)
+# If it's not there, look one level up (Your local laptop style)
+processed_path = os.path.join(BASE_DIR, "processed_data")
+if not os.path.exists(processed_path):
+    processed_path = os.path.join(BASE_DIR, "..", "processed_data")
 
-# 3. Load the models using this corrected relative path
+# 3. Load the models using the verified path
 model = joblib.load(os.path.join(processed_path, 'water_model.pkl'))
 le = joblib.load(os.path.join(processed_path, 'location_encoder.pkl'))
 le_status = joblib.load(os.path.join(processed_path, 'status_encoder.pkl'))
+
 # --- DASHBOARD UI ---
 st.set_page_config(page_title="Campus Water AI", layout="wide")
 st.title("AI-Based Water Demand Forecasting")
