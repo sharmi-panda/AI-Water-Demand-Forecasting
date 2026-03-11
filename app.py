@@ -52,6 +52,9 @@ input_data = pd.DataFrame([[
     is_weekend,     # Is_Weekend
     loc_id          # Location_ID
 ]], columns=['Ambient_Temp_C', 'Day_of_Week', 'Month', 'Is_Weekend', 'Location_ID'])
+# Temporary diagnostic to see what the model wants
+st.write("Model expects these features:", model.get_booster().feature_names)
+st.write("You are providing these features:", list(input_data.columns))
 
 # 2. Predict using the 5-feature model
 prediction = model.predict(input_data)[0]
