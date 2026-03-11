@@ -59,19 +59,24 @@ input_data = pd.DataFrame([[
 ]], columns=['Ambient_Temp_C', 'Day_of_Week', 'Month', 'Is_Weekend', 'Location_ID'])
 
 # 1. Get the EXACT list of names the model is looking for
-model_features = model.get_booster().feature_names
+model_features = model.get_booster().feature_names 
+# Based on your previous logs, this is: 
+# ['Ambient_Temp_C', 'Day_of_Week', 'Month', 'Is_Weekend', 'Location_ID', 'Status_ID']
 
-# 2. Create the data as a simple list (in the correct order)
-# Note: Ensure status_id is NOT here if the model only wants 5 features
-data_values = [[temp, day_of_week, month, is_weekend, loc_id]]
+# 2. Create the data values - you MUST have 6 items here to match the 6 features
+data_values = [[
+    float(temp), 
+    float(day_of_week), 
+    float(month), 
+    float(is_weekend), 
+    float(loc_id), 
+ # <--- This was the missing 6th item!
+]]
 
-# 3. Create the DataFrame using the model's OWN feature names
+# 3. Create the DataFrame using the model's own names
 input_data = pd.DataFrame(data_values, columns=model_features)
 
-# 4. Force all values to float (XGBoost's native language)
-input_data = input_data.astype(float)
-
-# 5. Predict
+# 4. Predict
 prediction = model.predict(input_data)[0]
 
 SAVINGS_PER_LITER = 0.002  # Estimated cost saved by pumping off-peak
