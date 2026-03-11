@@ -70,7 +70,7 @@ data_values = [[
     float(month), 
     float(is_weekend), 
     float(loc_id), 
- # <--- This was the missing 6th item!
+    float(status_id)# <--- This was the missing 6th item!
 ]]
 
 # 3. Create the DataFrame using the model's own names
