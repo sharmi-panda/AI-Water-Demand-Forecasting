@@ -5,17 +5,16 @@ import datetime
 import os
 import numpy as np
 
-# This finds exactly where app.py is sitting on your computer
+# 1. Get the directory where app.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# This builds the path to the folder above it
-processed_path = os.path.join(BASE_DIR, "..", "processed_data")
+# 2. Fix the path: Remove the ".." so it looks INSIDE your project folder
+processed_path = os.path.join(BASE_DIR, "processed_data")
 
-# Now load using the absolute path
+# 3. Load the models using this corrected path
 model = joblib.load(os.path.join(processed_path, 'water_model.pkl'))
 le = joblib.load(os.path.join(processed_path, 'location_encoder.pkl'))
 le_status = joblib.load(os.path.join(processed_path, 'status_encoder.pkl'))
-
 # --- DASHBOARD UI ---
 st.set_page_config(page_title="Campus Water AI", layout="wide")
 st.title("AI-Based Water Demand Forecasting")
