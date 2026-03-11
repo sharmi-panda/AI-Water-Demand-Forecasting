@@ -5,13 +5,13 @@ import datetime
 import os
 import numpy as np
 
-# 1. Get the directory where app.py is located
+# 1. Get the directory where app.py is sitting (the 'notebooks' folder)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Fix the path: Remove the ".." so it looks INSIDE your project folder
-processed_path = os.path.join(BASE_DIR, "processed_data")
+# 2. Go UP one level to the main project folder, then into 'processed_data'
+processed_path = os.path.join(BASE_DIR, "..", "processed_data")
 
-# 3. Load the models using this corrected path
+# 3. Load the models using this corrected relative path
 model = joblib.load(os.path.join(processed_path, 'water_model.pkl'))
 le = joblib.load(os.path.join(processed_path, 'location_encoder.pkl'))
 le_status = joblib.load(os.path.join(processed_path, 'status_encoder.pkl'))
@@ -45,19 +45,31 @@ loc_id = le.transform([location])[0]
 status_id = le_status.transform([status])[0]
 # Inside your app.py prediction logic:
 # 1. Prepare ONLY the 5 features your model was trained on
+# --- AI PREDICTION LOGIC ---
 input_data = pd.DataFrame([[
     temp,           # Ambient_Temp_C
     day_of_week,    # Day_of_Week
     month,          # Month
     is_weekend,     # Is_Weekend
-    loc_id          # Location_ID
+    loc_id       # Location 
 ]], columns=['Ambient_Temp_C', 'Day_of_Week', 'Month', 'Is_Weekend', 'Location_ID'])
-# Temporary diagnostic to see what the model wants
-st.write("Model expects these features:", model.get_booster().feature_names)
-st.write("You are providing these features:", list(input_data.columns))
 
-# 2. Predict using the 5-feature model
+# 1. Get the EXACT list of names the model is looking for
+model_features = model.get_booster().feature_names
+
+# 2. Create the data as a simple list (in the correct order)
+# Note: Ensure status_id is NOT here if the model only wants 5 features
+data_values = [[temp, day_of_week, month, is_weekend, loc_id]]
+
+# 3. Create the DataFrame using the model's OWN feature names
+input_data = pd.DataFrame(data_values, columns=model_features)
+
+# 4. Force all values to float (XGBoost's native language)
+input_data = input_data.astype(float)
+
+# 5. Predict
 prediction = model.predict(input_data)[0]
+
 SAVINGS_PER_LITER = 0.002  # Estimated cost saved by pumping off-peak
 CO2_OFFSET_FACTOR = 0.8    # kg of CO2 saved per 1000L by using night-grid power
 
