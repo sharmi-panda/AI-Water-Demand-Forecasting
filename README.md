@@ -1,4 +1,4 @@
-## AI Water Demand Forecasting
+# AI Water Demand Forecasting
 
 **Predictive demand and pumping optimization for a campus water system.**
 
